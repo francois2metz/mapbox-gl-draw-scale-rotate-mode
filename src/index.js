@@ -438,6 +438,8 @@ function parseSRCenter(value, defaultSRCenter = SRCenter.Center) {
         scaleCenter: default 'center' or 'opposite',
 
         canSelectFeatures: default true,    // can exit to simple_select mode
+
+        updateOnMove: true
     }
  */
 SRMode.onSetup = function (opts) {
@@ -488,6 +490,7 @@ SRMode.onSetup = function (opts) {
     dragMoving: false,
     canDragMove: false,
     selectedCoordPaths: opts.coordPath ? [opts.coordPath] : [],
+    updateOnMove: opts.updateOnMove != undefined ? opts.updateOnMove : true,
   };
 
   if (!(state.canRotate || state.canScale)) {
@@ -885,8 +888,9 @@ SRMode.dragRotatePoint = function (state, e, delta) {
   });
 
   state.feature.incomingCoords(rotatedFeature.geometry.coordinates);
-  // TODO add option for this:
-  this.fireUpdate();
+  if (state.updateOnMove) {
+    this.fireUpdate();
+  }
 };
 
 SRMode.dragScalePoint = function (state, e, delta) {
@@ -917,15 +921,17 @@ SRMode.dragScalePoint = function (state, e, delta) {
   });
 
   state.feature.incomingCoords(scaledFeature.geometry.coordinates);
-  // TODO add option for this:
-  this.fireUpdate();
+  if (state.updateOnMove) {
+    this.fireUpdate();
+  }
 };
 
 SRMode.dragFeature = function (state, e, delta) {
   moveFeatures(this.getSelected(), delta);
   state.dragMoveLocation = e.lngLat;
-  // TODO add option for this:
-  this.fireUpdate();
+  if (state.updateOnMove) {
+    this.fireUpdate();
+  }
 };
 
 SRMode.fireUpdate = function () {
