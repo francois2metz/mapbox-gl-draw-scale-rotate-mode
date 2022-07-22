@@ -507,14 +507,18 @@ SRMode.onSetup = function (opts) {
   });
 
   var _this = this;
-  this.map.loadImage(rotate, function (error, image) {
-    if (error) throw error;
-    _this.map.addImage('rotate', image);
-  });
-  this.map.loadImage(scale, function (error, image) {
-    if (error) throw error;
-    _this.map.addImage('scale', image);
-  });
+  if (!this.map.hasImage('rotate')) {
+    this.map.loadImage(rotate, function (error, image) {
+      if (error) throw error;
+      _this.map.addImage('rotate', image);
+    });
+  }
+  if (!this.map.hasImage('scale')) {
+    this.map.loadImage(scale, function (error, image) {
+      if (error) throw error;
+      _this.map.addImage('scale', image);
+    });
+  }
 
   return state;
 };
